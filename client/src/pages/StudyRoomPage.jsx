@@ -1,24 +1,20 @@
-// FlashcardSection.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import api from '../api';
 import socket from '../socket';
 import { useUser } from '../UserContext';
 
-const FlashcardSection = ({ roomId, flashcards, setFlashcards }) => {
+const FlashcardSection = ({  flashcards, setFlashcards }) => {
   const { user } = useUser();
-  const [newFlashcard, setNewFlashcard] = useState({ question: '', answer: '' });
-
+  const roomId = useParams().roomId;
+  const [newFlashcard, setNewFlashcard] = useState({ question: '',roomId, answer: '' });
+  console.log(newFlashcard)
   const handleAddFlashcard = async (e) => {
     e.preventDefault();
     if (!newFlashcard.question.trim() || !newFlashcard.answer.trim() || !user) return;
     try {
-      console.log({
-        question: newFlashcard.question,
-        answer: newFlashcard.answer,
-        room: roomId,
-        createdBy: user.id,
-      });
-      const res = await api.post('/flashcards', {
+      console.log(newFlashcard);
+      const res = await api.post('/flashcards/', {
         question: newFlashcard.question,
         answer: newFlashcard.answer,
         room: roomId,
@@ -27,8 +23,9 @@ const FlashcardSection = ({ roomId, flashcards, setFlashcards }) => {
       setFlashcards((prev) => [...prev, res.data]);
       socket.emit('flashcardUpdate', { roomId, flashcard: res.data });
       setNewFlashcard({ question: '', answer: '' });
-    } catch {
+    } catch(err){
       alert('Failed to add flashcard');
+      console.error('post error',err);
     }
   };
 
@@ -63,4 +60,48 @@ const FlashcardSection = ({ roomId, flashcards, setFlashcards }) => {
   );
 };
 
-export default FlashcardSection;
+const StudyRoomPage = () => {
+  const { roomId } = useParams();
+  const [flashcards, setFlashcards] = useState([]);
+
+  useEffect(() => {
+    const fetchFlashcards = async () => {
+      try {
+        const res = await api.get(`/flashcards/${roomId}`);
+        setFlashcards(res.data);
+      } catch (err) {
+        console.error('Failed to fetch flashcards', err);
+      }
+    };
+    if (roomId) fetchFlashcards();
+  }, [roomId]);
+
+  useEffect(() => {
+    if (!roomId) return;
+    if (!socket.connected) socket.connect();
+    socket.emit('joinRoom', { roomId });
+
+    const handleFlashcardUpdate = (flashcard) => {
+      setFlashcards(prev => {
+        // Avoid duplicates
+        if (prev.some(f => f._id === flashcard._id)) return prev;
+        return [...prev, flashcard];
+      });
+    };
+    socket.on('flashcardUpdate', handleFlashcardUpdate);
+
+    return () => {
+      socket.off('flashcardUpdate', handleFlashcardUpdate);
+      // Optionally: socket.emit('leaveRoom', { roomId });
+    };
+  }, [roomId]);
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-4">Study Room</h1>
+      <FlashcardSection roomId={roomId} flashcards={flashcards} setFlashcards={setFlashcards} />
+    </div>
+  );
+};
+
+export default StudyRoomPage;

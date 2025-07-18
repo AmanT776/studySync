@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Flashcard = require('../models/Flashcard');
 
-// List flashcards for a room
+
 router.get('/:roomId', async (req, res) => {
   try {
     const flashcards = await Flashcard.find({ room: req.params.roomId });
@@ -12,7 +12,7 @@ router.get('/:roomId', async (req, res) => {
   }
 });
 
-// Add a flashcard to a room
+
 router.post('/', async (req, res) => {
   try {
     const { question, answer, room, createdBy } = req.body;
