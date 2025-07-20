@@ -71,32 +71,25 @@ const ProgressPage = () => {
   const [progress, setProgress] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+useEffect(() => {
+    if (!user?.id) return;
 
-  useEffect(() => {
-    // Debug logs for user and user.id
-    console.log('User object:', user);
-    console.log('user.id:', user?.id);
-    // Only fetch if user.id is a valid 24-char hex string
-    const isValidObjectId = (id) => typeof id === 'string' && id.length === 24 && /^[a-fA-F0-9]+$/.test(id);
+    console.log("Fetching progress for user ID:", user.id);
+
     const fetchData = async () => {
-      if (!user || !isValidObjectId(user.id)) {
-        setError('Invalid or missing user ID');
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
       try {
-        console.log('Fetching progress for user:', user.id);
-        const progressRes = await api.get(`/progress/user/${user.id}`);
-        setProgress(progressRes.data);
+        const response = await api.get(`/progress/user/${user.id}`);
+        setProgress(response.data);
+        console.log("Fetched progress:", response.data);
       } catch (err) {
-        setError('Failed to load progress');
-      } finally {
-        setLoading(false);
+        console.error('Error fetching progress:', err);
+        setError(err?.response?.data?.message || 'Failed to load progress');
       }
     };
+
     fetchData();
   }, [user]);
+
 
   return (
     <div className="min-h-screen bg-gray-50">

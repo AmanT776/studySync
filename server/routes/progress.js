@@ -21,6 +21,7 @@ router.get('/:userId/:roomId', async (req, res) => {
 // Update progress for a user in a room (push quiz marks or accumulate stats)
 router.post('/', async (req, res) => {
   const { user, room, streak, stats, score, total, quizId } = req.body;
+  console.log(req.body)
   if (!mongoose.Types.ObjectId.isValid(user) || !mongoose.Types.ObjectId.isValid(room)) {
     return res.status(400).json({ message: 'Invalid user or room ObjectId' });
   }
@@ -59,18 +60,41 @@ router.post('/', async (req, res) => {
 // Get all progress for a user
 router.get('/user/:userId', async (req, res) => {
   const { userId } = req.params;
-  // Detailed debug log
-  console.log('userId:', JSON.stringify(userId), 'length:', userId.length, 'isValid:', mongoose.Types.ObjectId.isValid(userId));
+
+  // Log raw input
+  console.log('[Progress Route] Fetching progress for userId:', userId);
+
+  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ message: 'Invalid userId', userId, length: userId.length });
+    console.warn('[Progress Route] Invalid ObjectId:', userId);
+    return res.status(400).json({
+      message: 'Invalid userId format',
+      userId,
+      isValid: false
+    });
   }
+
   try {
     const progress = await Progress.find({ user: userId });
-    res.json(progress);
-  } catch (err) {
-    console.error('Error fetching progress for user:', err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.log(progress)
+    if (!progress || progress.length === 0) {
+      console.info('[Progress Route] No progress found for user:', userId);
+      return res.status(404).json({
+        message: 'No progress records found for this user.',
+        userId
+      });
+    }
+
+    // Success response
+    console.log('[Progress Route] Progress records found:', progress.length);
+    res.status(200).json(progress);
+
+  } catch (error) {
+    console.error('[Progress Route] Server error:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
+    });
   }
 });
-
 module.exports = router; 

@@ -47,6 +47,7 @@ const QuizPage = () => {
       total: quizOrder.length,
       // quizId: ... // Optionally add quizId if you have it
     };
+    console.log(payload)
     try {
       console.log('Posting quiz result to progress:', payload);
       await api.post('/progress', payload);
@@ -85,7 +86,7 @@ const QuizPage = () => {
       <div className="p-8 text-center">
         <h2 className="text-2xl font-bold mb-4">Quiz Complete!</h2>
         <p className="mb-4">Your score: <span className="font-semibold">{score} / {quizOrder.length}</span></p>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => navigate(`/room/${roomId}`)}>Back to Room</button>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => {navigate(`/room/${roomId})`) } }>Back to Room</button>
       </div>
     );
   }

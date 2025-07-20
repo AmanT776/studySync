@@ -20,7 +20,10 @@ const LoginPage = () => {
     setError('');
     try {
       const res = await api.post('/auth/login', form);
-      login(res.data.user, res.data.token);
+      // Ensure user object has both id and _id
+      const user = res.data.user;
+      const userWithId = { ...user, id: user.id || user._id };
+      login(userWithId, res.data.token);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
