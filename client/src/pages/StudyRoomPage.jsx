@@ -108,7 +108,7 @@ const StudyRoomPage = () => {
       <h1 className="text-2xl font-bold mb-4">Study Room</h1>
       <button
         className="mb-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        onClick={() => window.location.href = `/room/${roomId}/quiz`}
+        onClick={() => window.location.href = `/room/${roomId}`}
       >
         Take Quiz
       </button>
