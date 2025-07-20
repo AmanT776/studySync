@@ -5,7 +5,6 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import StudyRoomPage from './pages/StudyRoomPage';
-import ProgressPage from './pages/ProgressPage';
 import QuizPage from './pages/QuizPage';
 import { useUser } from './UserContext';
 
@@ -26,7 +25,6 @@ export function App() {
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/room/:roomId" element={<PrivateRoute><StudyRoomPage /></PrivateRoute>} />
           <Route path="/room/:roomId/quiz" element={<PrivateRoute><QuizPage /></PrivateRoute>} />
-          <Route path="/progress" element={<PrivateRoute><ProgressPage /></PrivateRoute>} />
         </Routes>
       </div>
     </Router>

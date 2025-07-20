@@ -32,9 +32,6 @@ const Navbar = ({
                 <Link to="/dashboard" className="px-3 py-2 text-gray-700 hover:text-blue-500">
                   Dashboard
                 </Link>
-                <Link to="/progress" className="px-3 py-2 text-gray-700 hover:text-blue-500">
-                  Progress
-                </Link>
                 <button className="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={handleLogout}>
                   Log Out
                 </button>
@@ -61,9 +58,6 @@ const Navbar = ({
             {isLoggedIn ? <>
                 <Link to="/dashboard" className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-500">
                   Dashboard
-                </Link>
-                <Link to="/progress" className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-500">
-                  Progress
                 </Link>
                 <button className="w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-500">
                   Log Out

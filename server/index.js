@@ -17,7 +17,7 @@ const io = new Server(server, {
 
 app.use(cors({
   origin: [
-    "http://localhost:5174",
+    "http://localhost:5173",
     "https://study-sync-qim8jis70-amanuel-tesfayes-projects.vercel.app",
     "https://study-sync-liard-seven.vercel.app"  
   ],
@@ -37,7 +37,6 @@ const authRoutes = require('./routes/auth');
 const roomRoutes = require('./routes/rooms');
 const flashcardRoutes = require('./routes/flashcards');
 const quizRoutes = require('./routes/quizzes');
-const progressRoutes = require('./routes/progress');
 const setupSocket = require('./socket');
 setupSocket(io);
 
@@ -45,7 +44,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/flashcards', flashcardRoutes);
 app.use('/api/quizzes', quizRoutes);
-app.use('/api/progress', progressRoutes);
+
 
 
 app.get('/', (req, res) => {

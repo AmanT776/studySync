@@ -21,7 +21,12 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      await api.post('/auth/register', form);
+      const res = await api.post('/auth/register', form);
+      // Immediately log in the user after registration
+      const loginRes = await api.post('/auth/login', { email: form.email, password: form.password });
+      const user = loginRes.data.user;
+      const userWithId = { ...user, id: user.id || user._id };
+      login(userWithId, loginRes.data.token);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');

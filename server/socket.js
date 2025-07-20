@@ -1,4 +1,3 @@
-const Progress = require('./models/Progress');
 const Quiz = require('./models/Quiz');
 
 function isSameDay(d1, d2) {
