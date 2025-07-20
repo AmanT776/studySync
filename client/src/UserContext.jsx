@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export const UserContext = createContext(undefined);
 
@@ -14,6 +14,15 @@ export const UserProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
   const [token, setToken] = useState(() => localStorage.getItem('token') || '');
+
+  // Migration: if user._id exists but user.id does not, copy _id to id
+  useEffect(() => {
+    if (user && user._id && !user.id) {
+      const migratedUser = { ...user, id: user._id };
+      setUser(migratedUser);
+      localStorage.setItem('user', JSON.stringify(migratedUser));
+    }
+  }, [user]);
 
   const login = (user, token) => {
     setUser(user);

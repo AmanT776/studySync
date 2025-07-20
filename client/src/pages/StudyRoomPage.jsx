@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
 import socket from '../socket';
 import { useUser } from '../UserContext';
@@ -62,6 +62,7 @@ const FlashcardSection = ({  flashcards, setFlashcards }) => {
 
 const StudyRoomPage = () => {
   const { roomId } = useParams();
+  const navigate = useNavigate();
   const [flashcards, setFlashcards] = useState([]);
 
   useEffect(() => {
@@ -98,7 +99,19 @@ const StudyRoomPage = () => {
 
   return (
     <div>
+      <button
+        className="mb-4 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+        onClick={() => navigate('/dashboard')}
+      >
+        &larr; Back to Dashboard
+      </button>
       <h1 className="text-2xl font-bold mb-4">Study Room</h1>
+      <button
+        className="mb-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        onClick={() => window.location.href = `/room/${roomId}/quiz`}
+      >
+        Take Quiz
+      </button>
       <FlashcardSection roomId={roomId} flashcards={flashcards} setFlashcards={setFlashcards} />
     </div>
   );
