@@ -1,10 +1,15 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/api'; // fallback to localhost
 
 const api = axios.create({
-  baseURL: API_BASE_URL ,
-  withCredentials: false,
+    baseURL: apiUrl,
+    headers: {
+    'Content-Type': 'application/json'
+  }
 });
+
+console.log('API Base URL:', apiUrl);
 
 export default api; 

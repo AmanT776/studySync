@@ -22,12 +22,6 @@ const RegisterPage = () => {
 
     try {
       await api.post('/auth/register', form);
-      const res = await api.post('/auth/login', {
-        email: form.email,
-        password: form.password,
-      });
-
-      login(res.data.user, res.data.token);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
