@@ -3,7 +3,7 @@ const router = express.Router();
 const Quiz = require('../models/Quiz');
 
 // List quizzes for a room
-router.get('/:roomId', async (req, res) => {
+router.get('/:roomId/quiz', async (req, res) => {
   try {
     const quizzes = await Quiz.find({ room: req.params.roomId });
     res.json(quizzes);
